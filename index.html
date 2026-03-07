@@ -3,54 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gaučosi - Comet Live</title>
+    <title>Gaučosi Live</title>
     <style>
-        :root { --bg: #0d1b2a; --card: #1b263b; --accent: #415a77; --gold: #e0e1dd; }
-        body { font-family: sans-serif; margin: 0; background: var(--bg); color: white; }
-        .header { background: var(--card); padding: 15px; text-align: center; border-bottom: 2px solid var(--accent); }
-        .tab-container { display: flex; background: var(--card); }
-        .tab { flex: 1; padding: 15px; text-align: center; cursor: pointer; opacity: 0.5; }
-        .tab.active { opacity: 1; border-bottom: 3px solid var(--gold); }
+        :root { --bg: #0b132b; --card: #1c2541; --accent: #3a506b; --gold: #6fffe9; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--bg); color: white; }
+        .header { background: var(--card); padding: 20px; text-align: center; border-bottom: 3px solid var(--accent); }
+        .selector { display: flex; background: #000; padding: 5px; }
+        .sel-btn { flex: 1; padding: 10px; text-align: center; cursor: pointer; font-size: 0.8em; opacity: 0.5; }
+        .sel-btn.active { opacity: 1; color: var(--gold); border-bottom: 2px solid var(--gold); }
         .container { padding: 15px; }
-        .match { background: var(--card); margin-bottom: 10px; padding: 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
-        .gaucosi-row { background: rgba(224, 225, 221, 0.2) !important; font-weight: bold; }
-        table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 8px; }
-        th { background: var(--accent); padding: 10px; text-align: left; }
-        td { padding: 10px; border-bottom: 1px solid var(--bg); }
+        .match { background: var(--card); padding: 15px; margin-bottom: 10px; border-radius: 10px; display: flex; justify-content: space-between; border-left: 5px solid var(--gold); }
+        .gaucosi-row { background: rgba(111, 255, 233, 0.1) !important; color: var(--gold); }
+        table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 10px; overflow: hidden; }
+        td, th { padding: 12px; text-align: left; border-bottom: 1px solid var(--bg); }
     </style>
 </head>
 <body>
-    <div class="header">COMET LIVE WEB</div>
-    <div class="tab-container">
-        <div class="tab active" onclick="prikazi('rez')">REZULTATI</div>
-        <div class="tab" onclick="prikazi('tab')">TABELA</div>
+    <div class="header">GAUČOSI ČAČAK</div>
+    <div class="selector">
+        <div class="sel-btn active" onclick="switchLiga('petlici')">PETLIĆI</div>
+        <div class="sel-btn" onclick="switchLiga('fudbal9')">FUDBAL 9</div>
     </div>
-    <div id="content" class="container">Učitavanje...</div>
+    <div class="container" id="out">Učitavanje...</div>
 
     <script>
-        let sveznji = { rezultati: [], tabela: [] };
-        async function osvezi() {
-            try {
-                const r = await fetch('podaci.json?t=' + Date.now());
-                sveznji = await r.json();
-                prikazi('rez');
-            } catch (e) { document.getElementById('content').innerHTML = "Ažuriranje u toku..."; }
+        let sve = {};
+        let trenutna = 'petlici';
+
+        async function load() {
+            const r = await fetch('podaci.json?t=' + Date.now());
+            sve = await r.json();
+            render();
         }
-        function prikazi(tip) {
-            const c = document.getElementById('content');
-            document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', (tip==='rez' && i===0) || (tip==='tab' && i===1)));
-            if(tip === 'rez') {
-                c.innerHTML = sveznji.rezultati.map(m => `<div class="match"><span>${m.domacin}</span><b style="color:var(--gold)">${m.rezultat}</b><span>${m.gost}</span></div>`).join('') || "Nema novih rezultata.";
-            } else {
-                let h = '<table><tr><th>#</th><th>Klub</th><th>B</th></tr>';
-                sveznji.tabela.forEach(k => {
-                    let isGauco = k.klub.includes("Gauč") ? 'class="gaucosi-row"' : '';
-                    h += `<tr ${isGauco}><td>${k.poz || k.pozicija}</td><td>${k.klub}</td><td>${k.bod || k.bodovi}</td></tr>`;
-                });
-                c.innerHTML = h + '</table>';
-            }
+
+        function render() {
+            const d = sve[trenutna];
+            let h = '<h4 style="color:gray">POSLEDNJI REZULTATI</h4>';
+            h += d.rezultati.map(m => `<div class="match"><span>${m.domacin}</span><b>${m.rezultat}</b><span>${m.gost}</span></div>`).join('') || "Nema unetih rezultata.";
+            h += '<h4 style="color:gray; margin-top:20px">TABELA</h4><table>';
+            d.tabela.forEach(k => {
+                let cls = k.klub.includes("Gauč") ? 'class="gaucosi-row"' : '';
+                h += `<tr ${cls}><td>${k.poz}</td><td>${k.klub}</td><td><b>${k.bod}</b></td></tr>`;
+            });
+            document.getElementById('out').innerHTML = h + '</table>';
         }
-        osvezi();
+
+        function switchLiga(l) {
+            trenutna = l;
+            document.querySelectorAll('.sel-btn').forEach((b, i) => b.classList.toggle('active', (l==='petlici' && i===0) || (l==='fudbal9' && i===1)));
+            render();
+        }
+        load();
     </script>
 </body>
 </html>
