@@ -1,26 +1,71 @@
 {
     "rezultati": [
         {
-            "domacin": "Borac 1926",
-            "gost": "BIP",
-            "rezultat": "2:1"
-        },
-        {
-            "domacin": "Ares",
-            "gost": "Sloboda",
+            "domacin": "Nema",
+            "gost": "utakmica",
             "rezultat": "0:0"
         }
     ],
     "tabela": [
         {
-            "pozicija": 1,
-            "klub": "Borac 1926",
-            "bodovi": 28
+            "poz": "1",
+            "klub": "",
+            "bod": "28"
         },
         {
-            "pozicija": 2,
-            "klub": "BIP",
-            "bodovi": 21
+            "poz": "2",
+            "klub": "",
+            "bod": "27"
+        },
+        {
+            "poz": "3",
+            "klub": "",
+            "bod": "23"
+        },
+        {
+            "poz": "4",
+            "klub": "",
+            "bod": "22"
+        },
+        {
+            "poz": "5",
+            "klub": "",
+            "bod": "21"
+        },
+        {
+            "poz": "6",
+            "klub": "",
+            "bod": "17"
+        },
+        {
+            "poz": "7",
+            "klub": "",
+            "bod": "15"
+        },
+        {
+            "poz": "8",
+            "klub": "",
+            "bod": "14"
+        },
+        {
+            "poz": "9",
+            "klub": "",
+            "bod": "10"
+        },
+        {
+            "poz": "10",
+            "klub": "",
+            "bod": "6"
+        },
+        {
+            "poz": "11",
+            "klub": "",
+            "bod": "4"
+        },
+        {
+            "poz": "12",
+            "klub": "",
+            "bod": "1"
         }
     ]
 }
