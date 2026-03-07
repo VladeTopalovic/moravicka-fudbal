@@ -1,0 +1,26 @@
+{
+    "rezultati": [
+        {
+            "domacin": "Borac 1926",
+            "gost": "BIP",
+            "rezultat": "2:1"
+        },
+        {
+            "domacin": "Ares",
+            "gost": "Sloboda",
+            "rezultat": "0:0"
+        }
+    ],
+    "tabela": [
+        {
+            "pozicija": 1,
+            "klub": "Borac 1926",
+            "bodovi": 28
+        },
+        {
+            "pozicija": 2,
+            "klub": "BIP",
+            "bodovi": 21
+        }
+    ]
+}
