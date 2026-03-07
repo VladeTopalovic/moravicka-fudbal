@@ -1,0 +1,25 @@
+name: Osvezi Podatke
+on:
+  schedule:
+    - cron: '0 * * * *' # Ovo znaci: pokreni se na svakih sat vremena
+  workflow_dispatch: # Ovo ti dozvoljava da pokrenes rucno kad god hoces
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Instaliraj Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - name: Instaliraj biblioteke
+        run: pip install requests beautifulsoup4
+      - name: Pokreni skriptu
+        run: python scraper.py
+      - name: Sacuvaj izmene
+        run: |
+          git config --global user.name 'Fudbal Bot'
+          git config --global user.email 'bot@github.com'
+          git add podaci.json
+          git commit -m "Automatsko azuriranje rezultata" || exit 0
+          git push
