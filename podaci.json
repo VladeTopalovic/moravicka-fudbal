@@ -1,4 +1,10 @@
 {
-    "rezultati": [],
+    "rezultati": [
+        {
+            "domacin": "Gaučosi",
+            "gost": "Čekaju termin",
+            "rezultat": "v"
+        }
+    ],
     "tabela": []
 }
