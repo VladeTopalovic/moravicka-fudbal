@@ -1,10 +1,10 @@
 {
-    "rezultati": [
-        {
-            "domacin": "Gaučosi",
-            "gost": "Čekaju termin",
-            "rezultat": "v"
-        }
-    ],
-    "tabela": []
+    "petlici": {
+        "rezultati": [],
+        "tabela": []
+    },
+    "fudbal9": {
+        "rezultati": [],
+        "tabela": []
+    }
 }
