@@ -10,15 +10,19 @@ def skeniraj_ligu(url):
         r = requests.get(url, headers=headers, timeout=15)
         soup = BeautifulSoup(r.text, 'html.parser')
         
-        # TABELA
+        # TABELA - Hvatanje imena klubova
         rows = soup.select('.table-responsive table tr')
         for row in rows:
             cols = row.find_all('td')
             if len(cols) > 8:
-                # Ime kluba je u drugom polju (index 1), obično unutar <a> taga
+                # Ime kluba je u drugom polju (td[1])
                 klub_td = cols[1]
-                link = klub_td.find('a')
-                ime = link.text.strip() if link else klub_td.text.strip()
+                # Prvo gledamo da li postoji <a> tag, ako ne, uzimamo čist tekst
+                ime = ""
+                if klub_td.find('a'):
+                    ime = klub_td.find('a').text.strip()
+                else:
+                    ime = klub_td.text.strip()
                 
                 tabela.append({
                     "poz": cols[0].text.strip(),
@@ -26,10 +30,11 @@ def skeniraj_ligu(url):
                     "bod": cols[-1].text.strip()
                 })
 
-        # REZULTATI (Tražimo Gaučose)
+        # REZULTATI - Tražimo bilo šta što liči na Gaučose
         matches = soup.select('.n_utakmica')
         for m in matches:
-            if "gauč" in m.text.lower() or "gauc" in m.text.lower():
+            m_text = m.text.lower()
+            if "gauč" in m_text or "gauc" in m_text:
                 timovi = m.select('.n_tim_naziv')
                 rez = m.select_one('.n_rezultat')
                 if len(timovi) >= 2 and rez:
@@ -39,18 +44,18 @@ def skeniraj_ligu(url):
                         "rezultat": rez.text.strip()
                     })
     except Exception as e:
-        print(f"Greška: {e}")
+        print(f"Greska: {e}")
     return {"rezultati": rezultati, "tabela": tabela}
 
 def scrape():
-    # Linkovi za Petliće (7194) i Fudbal 9 (7193)
-    petlici_data = skeniraj_ligu("https://www.srbijasport.net/league/7194")
-    fudbal9_data = skeniraj_ligu("https://www.srbijasport.net/league/7193")
+    # Zvanični linkovi sa Srbija Sporta za tvoje dve lige
+    petlici_podaci = skeniraj_ligu("https://www.srbijasport.net/league/7194")
+    fudbal9_podaci = skeniraj_ligu("https://www.srbijasport.net/league/7193")
 
     with open('podaci.json', 'w', encoding='utf-8') as f:
         json.dump({
-            "petlici": petlici_data,
-            "fudbal9": fudbal9_data
+            "petlici": petlici_podaci,
+            "fudbal9": fudbal9_podaci
         }, f, ensure_ascii=False, indent=4)
 
 if __name__ == "__main__":
