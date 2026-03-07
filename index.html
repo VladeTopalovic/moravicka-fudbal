@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comet Web - Moravički Okrug</title>
+    <style>
+        :root { --bg: #0d1b2a; --card: #1b263b; --accent: #415a77; --gold: #e0e1dd; --red: #e63946; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--bg); color: white; }
+        .header { background: var(--card); padding: 15px; text-align: center; border-bottom: 2px solid var(--accent); }
+        .nav { display: flex; background: var(--card); position: sticky; top: 0; }
+        .tab { flex: 1; padding: 15px; text-align: center; cursor: pointer; font-weight: bold; opacity: 0.6; }
+        .tab.active { opacity: 1; border-bottom: 3px solid var(--gold); color: var(--gold); }
+        .container { padding: 15px; }
+        .match-card { background: var(--card); border-radius: 8px; padding: 12px; margin-bottom: 10px; display: flex; align-items: center; border-left: 4px solid var(--accent); }
+        .team { flex: 1; font-size: 0.95em; }
+        .score { background: var(--bg); padding: 5px 12px; border-radius: 4px; font-weight: bold; margin: 0 10px; min-width: 40px; text-align: center; color: var(--gold); }
+        table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 8px; overflow: hidden; }
+        th { background: var(--accent); padding: 10px; text-align: left; font-size: 0.8em; }
+        td { padding: 10px; border-bottom: 1px solid var(--bg); font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div style="font-size: 0.7em; color: var(--accent);">FS MORAVIČKOG OKRUGA</div>
+        <div style="font-weight: bold;">COMET LIVE WEB</div>
+    </div>
+    <div class="nav">
+        <div class="tab active" onclick="show('rez')">REZULTATI</div>
+        <div class="tab" onclick="show('tab')">TABELA</div>
+    </div>
+    <div class="container" id="content">Učitavanje...</div>
+
+    <script>
+        let data = { rezultati: [], tabela: [] };
+        async function load() {
+            try {
+                const res = await fetch('podaci.json?t=' + Date.now());
+                data = await res.json();
+                show('rez');
+            } catch (e) { document.getElementById('content').innerHTML = "Podaci se ažuriraju..."; }
+        }
+        function show(type) {
+            const cont = document.getElementById('content');
+            document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', (type==='rez' && i===0) || (type==='tab' && i===1)));
+            if(type === 'rez') {
+                cont.innerHTML = data.rezultati.map(m => `
+                    <div class="match-card">
+                        <div class="team">${m.domacin}</div>
+                        <div class="score">${m.rezultat}</div>
+                        <div class="team" style="text-align:right">${m.gost}</div>
+                    </div>`).join('') || "Nema trenutnih rezultata.";
+            } else {
+                cont.innerHTML = `<table><thead><tr><th>#</th><th>Klub</th><th>B</th></tr></thead><tbody>` + 
+                    data.tabela.map(k => `<tr><td>${k.poz}</td><td>${k.klub}</td><td><b>${k.bod}</b></td></tr>`).join('') + `</tbody></table>`;
+            }
+        }
+        load();
+    </script>
+</body>
+</html>
